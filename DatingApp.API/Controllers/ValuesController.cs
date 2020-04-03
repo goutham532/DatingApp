@@ -12,13 +12,21 @@ namespace DatingApp.API.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<ModelCls.values> Get()
         {
             SqlConnection sql = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB; Integrated Security=True; MultipleActiveResultSets=True");
             sql.Open();
-            SqlCommand cmd = new SqlCommand("select username from Sairaj.dbo.userDetails", sql);
-            string value = cmd.ExecuteScalar().ToString();
-            return new string[] { value };
+            SqlCommand cmd = new SqlCommand("select username,pwd from Sairaj.dbo.userDetails", sql);
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<ModelCls.values> obj=new List<ModelCls.values>();
+                while (reader.Read())
+                {
+                    ModelCls.values val=new ModelCls.values();
+                   val.id=reader[1].ToString();
+                   val.name=reader[0].ToString();
+                   obj.Add(val);
+                }
+            return obj;
         }
 
         // GET api/values/5
